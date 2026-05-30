@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://ponto-eletronico-api-pis3.onrender.com';
 
 let loggedUser = null;
 
