@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ponto Eletrônico Multi-Empresas</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Biblioteca para exportar Excel -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="top-bar">
@@ -24,15 +26,15 @@
       <h2>🔐 Acesso ao Sistema</h2>
       <div class="form-group">
         <label>Matrícula / Usuário</label>
-        <input type="text" id="loginMatricula" placeholder="Ex: admin ou matrícula">
+        <input type="text" id="loginMatricula" placeholder="admin ou matrícula">
       </div>
       <div class="form-group">
         <label>Senha</label>
         <input type="password" id="loginSenha" placeholder="••••••">
       </div>
       <button id="doLoginBtn">Entrar</button>
-      <div id="loginError" style="color: red; margin-top: 1rem;"></div>
-      <div class="demo-info">Admin: admin/admin | Func: joao/123 (após criar)</div>
+      <div id="loginError" style="color: #dc2626; margin-top: 1rem;"></div>
+      <div class="demo-info">Admin: admin/admin | Funcionários: cadastre primeiro</div>
     </div>
   </div>
 
@@ -40,8 +42,36 @@
   <div id="empresasPage" class="page"><div class="card"><h2>🏢 Empresas</h2><div id="empresasList"></div><button id="showAddEmpresaBtn">+ Nova Empresa</button><div id="empresaFormDiv" style="display:none;"></div></div></div>
   <div id="funcionariosPage" class="page"><div class="card"><h2>👥 Funcionários</h2><div id="funcionariosList"></div><button id="showAddFuncBtn">+ Novo Funcionário</button><div id="funcionarioFormDiv" style="display:none;"></div></div></div>
   <div id="registrosPage" class="page"><div class="card"><h2>📋 Registros de Ponto (Geral)</h2><div id="todosRegistrosTabela"></div></div></div>
-  <div id="relatoriosPage" class="page"><div class="card"><h2>📊 Relatório de Horas</h2><div class="filter-bar"><select id="relEmpresa"><option value="">Todas empresas</option></select><select id="relFuncionario"><option value="">Todos funcionários</option></select><input type="date" id="relDataInicio"><input type="date" id="relDataFim"><button id="gerarRelatorioBtn">Gerar Relatório</button></div><div id="relatorioResultado"></div></div></div>
+  <div id="relatoriosPage" class="page">
+    <div class="card">
+      <h2>📊 Relatório de Horas</h2>
+      <div class="filter-bar">
+        <select id="relEmpresa"><option value="">Todas empresas</option></select>
+        <select id="relFuncionario"><option value="">Todos funcionários</option></select>
+        <input type="date" id="relDataInicio">
+        <input type="date" id="relDataFim">
+        <button id="gerarRelatorioBtn">📄 Gerar Relatório</button>
+        <button id="imprimirRelatorioBtn" style="background:#2c3e50;">🖨️ Imprimir</button>
+        <button id="exportarExcelBtn" style="background:#1e7e34;">📎 Exportar Excel</button>
+      </div>
+      <div id="relatorioResultado"></div>
+    </div>
+  </div>
   <div id="dashboardPage" class="page"><div class="card"><h2>📈 Dashboard Geral</h2><div class="dashboard-cards" id="dashboardCards"></div><h3>Últimos pontos registrados</h3><div id="ultimosPontosDashboard"></div></div></div>
+
+  <!-- Página Configurações (Admin) -->
+  <div id="configuracoesPage" class="page">
+    <div class="card">
+      <h2>⚙️ Configurações do Sistema</h2>
+      <p>Defina se o funcionário deve ser desconectado após cada ação de ponto:</p>
+      <div class="config-item"><label>🌅 Início Turno</label><input type="checkbox" id="cfg_inicio_turno"><span>Deslogar</span></div>
+      <div class="config-item"><label>🍽️ Início Intervalo</label><input type="checkbox" id="cfg_inicio_intervalo"><span>Deslogar</span></div>
+      <div class="config-item"><label>✅ Fim Intervalo</label><input type="checkbox" id="cfg_fim_intervalo"><span>Deslogar</span></div>
+      <div class="config-item"><label>🏁 Fim Turno</label><input type="checkbox" id="cfg_fim_turno"><span>Deslogar</span></div>
+      <button id="salvarConfigBtn" style="margin-top: 1rem;">Salvar Configurações</button>
+      <div id="configMsg" style="margin-top: 0.5rem;"></div>
+    </div>
+  </div>
 
   <!-- Páginas FUNCIONÁRIO -->
   <div id="pontoFuncPage" class="page"><div class="card"><h2>⏱️ Marcação de Ponto</h2><div id="funcNomeEmpresa"></div><div id="relogioAtual" class="relogio"></div><div class="ponto-buttons"><button id="btnInicioTurno" class="ponto-btn">🌅 Início Turno</button><button id="btnInicioIntervalo" class="ponto-btn">🍽️ Início Intervalo</button><button id="btnFimIntervalo" class="ponto-btn">✅ Fim Intervalo</button><button id="btnFimTurno" class="ponto-btn">🏁 Fim Turno</button></div><div id="statusPontoMsg" class="status-msg"></div><button id="btnReenviarWhats">📲 Reenviar resumo WhatsApp</button></div><div class="card"><h3>📜 Meus Registros Hoje</h3><div id="meusRegistrosHoje"></div></div></div>

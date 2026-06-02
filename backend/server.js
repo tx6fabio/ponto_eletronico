@@ -8,6 +8,7 @@ const empresasRoutes = require('./routes/empresas');
 const funcionariosRoutes = require('./routes/funcionarios');
 const pontosRoutes = require('./routes/pontos');
 const relatoriosRoutes = require('./routes/relatorios');
+const configuracoesRoutes = require('./routes/configuracoes');
 
 const app = express();
 
@@ -15,9 +16,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rota raiz para health check e evitar erro 404
+// Rota raiz
 app.get('/', (req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     message: '🚀 API do Ponto Eletrônico está online!',
     endpoints: [
       '/api/auth/login',
@@ -27,7 +28,8 @@ app.get('/', (req, res) => {
       '/api/pontos/todos',
       '/api/pontos/funcionario/:id',
       '/api/relatorios/horas',
-      '/api/relatorios/dashboard'
+      '/api/relatorios/dashboard',
+      '/api/configuracoes'
     ]
   });
 });
@@ -38,13 +40,14 @@ app.use('/api/empresas', empresasRoutes);
 app.use('/api/funcionarios', funcionariosRoutes);
 app.use('/api/pontos', pontosRoutes);
 app.use('/api/relatorios', relatoriosRoutes);
+app.use('/api/configuracoes', configuracoesRoutes);
 
-// Middleware para rotas não encontradas (404)
+// Middleware 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada' });
 });
 
-// Middleware de tratamento de erros genéricos
+// Middleware de erro
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Erro interno do servidor' });
